@@ -1,0 +1,6 @@
+MANIFEST.in
+README.md
+Tavis.egg-info/PKG-INFO
+Tavis.egg-info/SOURCES.txt
+Tavis.egg-info/dependency_links.txt
+Tavis.egg-info/top_level.txt
