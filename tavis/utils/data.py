@@ -4,18 +4,19 @@
 Created by Anthony Velardi on 11/2/18
 
 """
-
-vuln_dict = {
-  'vendor': {
-    'product': {
-      'version': {
+def vuln_dict():
+  vuln_dict = {
+    'vendor': {
+      'product': {
+        'version': {
+        },
+        'info': {
+        },
       },
       'info': {
       },
     },
     'info': {
-    },
-  },
-  'info': {
+    }
   }
-}
+  return vuln_dict

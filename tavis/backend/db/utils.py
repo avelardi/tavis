@@ -23,3 +23,32 @@ def get_db_session():
     Base.metadata.bind = engine
     dbsession = scoped_session(sessionmaker(bind=engine))
     return dbsession()
+
+def add_missing_cpe_vendor(cpe_dict,session):
+  for vendor in cpe_dict['vendor']:
+    if vendor in ['product','info']:
+      continue
+    try:
+      db_vendor = session.query(CPE_Vendor).filter(CPE_Vendor.name == vendor).first()
+    except:
+      db_vendor = None
+    if not db_vendor:
+      print('{} not in DB, adding...'.format(vendor))
+      vendor_object = CPE_Vendor(name=vendor,)
+      session.add(vendor_object)
+    session.commit()
+
+    
+
+def add_missing_cpe_product(product_dict,vendor_name,session):
+  vendor_id = session.query(CPE_Vendor).filter(CPE_Vendor.name == vendor_name).first().id
+  for product in product_dict:
+    try:
+      db_product = session.query(CPE_Product).filter(CPE_Product.name == product,CPE_Product.vendor == vendor_id).first()
+    except:
+      db_product = None
+    if not db_product:
+      product_object = CPE_Product(name=product,vendor=vendor_id)
+      session.add(product_object)
+      print('Adding product {}:{}'.format(str(vendor_id),product))
+  session.commit()
