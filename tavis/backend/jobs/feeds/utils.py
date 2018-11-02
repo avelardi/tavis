@@ -21,19 +21,22 @@ def xml_prep(url,zip=True):
     data = download_extract_zip(url)
   else:
     data = requests.get(url,verify=False).text
-  return xmltodict.parse(result)
+  return xmltodict.parse(data)
 
 class FeedManager(object):
   """FeedManager base class"""
-  def __init__(self, url, feed_type,meta_url=None):
+  def __init__(self, url, feed_type,meta_url=None,zip_file=False):
     self.url = url
     self.feed_data_raw = None
+    self.feed_data_parsed = None
     self.feed_type = feed_type
+    self.feed_filetype = 'xml'
     self.meta_url = meta_url
     self.meta_dict = {}
     self.meta_raw = None
     self.safe_mode = False
     self.outdated = False
+    self.zip_file = zip_file
 
   def meta_parse(self):
     meta_data = requests.get(self.meta_url)
@@ -49,5 +52,8 @@ class FeedManager(object):
         self.meta_dict[x[0]] = ':'.join(self.meta_dict[x[0]].split(':')[:-1])+self.meta_dict[x[0]].split(':')[-1]
         self.meta_dict[x[0]] = datetime.strptime(self.meta_dict[x[0]],'%Y-%m-%dT%H:%M:%S%z')
       #print('{}: {}'.format(x[0], x[1]))
-
-    
+  
+  def data_parse(self):
+    if self.feed_type == 0:
+      self.feed_data_parsed = xml_prep(self.url,zip=True)
+      

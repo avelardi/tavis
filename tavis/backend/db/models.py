@@ -195,8 +195,14 @@ class CPE_Version(Base):
   nvd_id = Column(Integer)
   title = Column(String)
   cpe_string = Column(String)
+  cpe_part = Column(String)
+  cpe_updates = relationship('CPE_Update')
   cpe_links = relationship("CPE_Link",secondary=link_cpe_version_url_table,back_populates="cpe_versions")
 
+class CPE_Update(Base):
+  version = Column(Integer, ForeignKey('cpe_version.id'))
+  update_number = Column(String)
+  
 class Operating_System(Base):
   name = Column(String)
   link = Column(String)
